@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Mail, 
   ArrowRight, 
@@ -66,19 +66,32 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<'info' | 'success' | 'error'>('info');
 
+  const [isVisible, setIsVisible] = useState<boolean>(isOpen);
+
+  useEffect(() => {
+    setIsVisible(isOpen);
+  }, [isOpen]);
+
   /**
    * Helper to ensure auth modal is closed immediately across all states and props
    */
   const setShowAuthModal = (show: boolean) => {
-    if (externalSetShowAuthModal) {
-      externalSetShowAuthModal(show);
-    }
     if (!show) {
+      setIsVisible(false);
       setIsSigningIn(false);
-      if (onClose) onClose();
+      if (externalSetShowAuthModal) {
+        externalSetShowAuthModal(false);
+      }
+      if (onClose) {
+        onClose();
+      }
       closeLoginModal();
       setIsLoginModalOpen(false);
     } else {
+      setIsVisible(true);
+      if (externalSetShowAuthModal) {
+        externalSetShowAuthModal(true);
+      }
       setIsLoginModalOpen(true);
     }
   };
@@ -220,13 +233,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
     try {
       const googleProfile = await FirebaseAuthService.signInWithGoogle();
+      // 1. Call setShowAuthModal(false) (or onClose()) IMMEDIATELY as the very first line upon Firebase authentication success
+      setShowAuthModal(false);
+      if (onClose) onClose();
+      setIsSigningIn(false);
+
       if (googleProfile && googleProfile.email) {
-        setShowAuthModal(false);
-        if (onClose) onClose();
-        setIsSigningIn(false);
         finalizeAuthentication(googleProfile);
-      } else {
-        setIsSigningIn(false);
       }
     } catch (err: any) {
       setIsSigningIn(false);
@@ -264,10 +277,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
     try {
       const profile = await FirebaseAuthService.signInWithEmail(cleanEmail, password);
+      // 1. Call setShowAuthModal(false) (or onClose()) IMMEDIATELY as the very first line upon Firebase authentication success
+      setShowAuthModal(false);
+      if (onClose) onClose();
+      setIsSigningIn(false);
+
       if (profile && profile.email) {
-        setIsSigningIn(false);
-        setShowAuthModal(false);
-        if (onClose) onClose();
         finalizeAuthentication(profile);
       }
     } catch (err: any) {
@@ -311,10 +326,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
     try {
       const newProfile = await FirebaseAuthService.signUpWithEmail(fullName, cleanEmail, password, targetExam);
+      // 1. Call setShowAuthModal(false) (or onClose()) IMMEDIATELY as the very first line upon Firebase authentication success
+      setShowAuthModal(false);
+      if (onClose) onClose();
+      setIsSigningIn(false);
+
       if (newProfile && newProfile.email) {
-        setIsSigningIn(false);
-        setShowAuthModal(false);
-        if (onClose) onClose();
         finalizeAuthentication(newProfile);
       }
     } catch (err: any) {
@@ -376,7 +393,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     if (onClose) onClose();
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !isVisible) return null;
 
   return (
     <div 
