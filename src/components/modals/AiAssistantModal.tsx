@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, X, Send, Bot, CheckSquare, Copy, Check, Paperclip } from 'lucide-react';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { useApp } from '../../context/AppContext';
 import { QuizSet } from '../../types';
 import { MOCK_QUESTIONS } from '../../data/mockData';
@@ -135,94 +136,160 @@ export const AiAssistantModal: React.FC = () => {
     let streamedAny = false;
     let accumulatedText = '';
 
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 45000);
+    // 1. VITE ENVIRONMENT VARIABLE ACCESS:
+    const apiKey =
+      import.meta.env.VITE_GEMINI_API_KEY ||
+      (typeof process !== 'undefined' ? process.env.VITE_GEMINI_API_KEY : '') ||
+      '';
 
-      const response = await fetch('/api/ai-assistant-stream', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: queryToSend,
-          history: chatHistory,
-          image: currentImage ? { data: currentImage.base64, mimeType: currentImage.mimeType } : undefined
-        }),
-        signal: controller.signal
-      });
+    if (apiKey) {
+      try {
+        // 2. GEMINI MODEL INITIALIZATION:
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-      clearTimeout(timeoutId);
+        const SYSTEM_INSTRUCTION = `तपाईं "Banking Tayari Nepal AI साथी" हुनुहुन्छ - नेपाल राष्ट्र बैंक (NRB), राष्ट्रिय वाणिज्य बैंक (RBB), कृषि विकास बैंक (ADBL), नेपाल बैंक लिमिटेड (NBL) तथा लोकसेवा आयोगका परीक्षार्थीहरूको लागि विशेष नेपाली भाषाको उच्चस्तरीय AI शिक्षक तथा विश्लेषक।
+बैंकिङ, कानुन (नेपाल राष्ट्र बैंक ऐन २०५८, बैंक तथा वित्तीय संस्था सम्बन्धी ऐन बाफिया २०७३, सम्पत्ति शुद्धीकरण निवारण ऐन), व्यवस्थापन, अर्थशास्त्र, लेखा, गणित, अङ्ग्रेजी वा सामान्य ज्ञानका प्रश्नहरूको विस्तृत, शुद्ध र परीक्षा-उपयोगी बुँदागत नेपालीमा उत्तर दिनुहोस्।
+यदि तस्बिर संलग्न छ भने तस्बिरमा भएका प्रश्नहरू/नोटहरू ध्यानपूर्वक पढी (OCR) त्यसको चरणबद्ध समाधान दिनुहोस्।`;
 
-      if (response.ok && response.body) {
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let buffer = '';
-        let isDone = false;
+        const fullPrompt = `${SYSTEM_INSTRUCTION}\n\nप्रयोगकर्ताको प्रश्न वा विषय:\n"${queryToSend}"`;
+        const contentParts: any[] = [fullPrompt];
 
-        while (!isDone) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-
-          for (const line of lines) {
-            const trimmedLine = line.trim();
-            if (!trimmedLine.startsWith('data:')) continue;
-            const dataStr = trimmedLine.replace(/^data:\s*/, '');
-            if (dataStr === '[DONE]') {
-              isDone = true;
-              break;
+        if (currentImage && currentImage.base64) {
+          const cleanBase64 = currentImage.base64.replace(/^data:image\/[a-zA-Z0-9.+]+;base64,/, '').trim();
+          contentParts.push({
+            inlineData: {
+              data: cleanBase64,
+              mimeType: currentImage.mimeType || 'image/jpeg'
             }
+          });
+        }
+
+        let streamResult: any = null;
+        try {
+          streamResult = await model.generateContentStream(contentParts);
+        } catch (primaryErr: any) {
+          console.error('Primary model gemini-1.5-flash error:', primaryErr);
+          // In case gemini-1.5-flash returns 404 in newer API version, fallback to candidate models
+          const fallbackCandidates = ['gemini-3.1-flash-lite', 'gemini-3.8-flash', 'gemini-flash-latest'];
+          for (const candidate of fallbackCandidates) {
             try {
-              const parsed = JSON.parse(dataStr);
-              if (parsed.chunk) {
-                streamedAny = true;
-                accumulatedText += parsed.chunk;
-                setMessages(prev =>
-                  prev.map(m => (m.id === aiMsgId ? { ...m, text: accumulatedText } : m))
-                );
-              }
-            } catch {
-              // Ignore partial JSON
+              const candidateModel = genAI.getGenerativeModel({ model: candidate });
+              streamResult = await candidateModel.generateContentStream(contentParts);
+              break;
+            } catch (cErr) {
+              console.error(`Candidate model ${candidate} failed:`, cErr);
+            }
+          }
+          if (!streamResult) {
+            throw primaryErr;
+          }
+        }
+
+        if (streamResult && streamResult.stream) {
+          for await (const chunk of streamResult.stream) {
+            const chunkText = chunk.text();
+            if (chunkText) {
+              streamedAny = true;
+              accumulatedText += chunkText;
+              setMessages(prev =>
+                prev.map(m => (m.id === aiMsgId ? { ...m, text: accumulatedText } : m))
+              );
             }
           }
         }
+      } catch (error: any) {
+        // Log console.error(error) to browser console for debugging
+        console.error('Gemini API call failed:', error);
+        // Do NOT throw generic "अस्थायी समस्या" fallback error if the key exists
+        accumulatedText = `⚠️ Gemini API Error: ${error?.message || error || 'API कल असफल भयो'}`;
+        setMessages(prev =>
+          prev.map(m => (m.id === aiMsgId ? { ...m, text: accumulatedText } : m))
+        );
       }
-    } catch (streamErr) {
-      console.warn('Streaming connection issue:', streamErr);
-    }
-
-    // If streaming failed to return text, fallback to standard Gemini API endpoint
-    if (!streamedAny || !accumulatedText.trim()) {
+    } else {
+      // If VITE_GEMINI_API_KEY is not defined in client environment, use server-side streaming proxy
       try {
-        const fallbackRes = await fetch('/api/ai-assistant', {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 45000);
+
+        const response = await fetch('/api/ai-assistant-stream', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             query: queryToSend,
             history: chatHistory,
             image: currentImage ? { data: currentImage.base64, mimeType: currentImage.mimeType } : undefined
-          })
+          }),
+          signal: controller.signal
         });
-        if (fallbackRes.ok) {
-          const data = await fallbackRes.json();
-          if (data.answer && data.answer.trim()) {
-            accumulatedText = data.answer.trim();
-            setMessages(prev =>
-              prev.map(m => (m.id === aiMsgId ? { ...m, text: accumulatedText } : m))
-            );
+
+        clearTimeout(timeoutId);
+
+        if (response.ok && response.body) {
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder('utf-8');
+          let buffer = '';
+          let isDone = false;
+
+          while (!isDone) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              const trimmedLine = line.trim();
+              if (!trimmedLine.startsWith('data:')) continue;
+              const dataStr = trimmedLine.replace(/^data:\s*/, '');
+              if (dataStr === '[DONE]') {
+                isDone = true;
+                break;
+              }
+              try {
+                const parsed = JSON.parse(dataStr);
+                if (parsed.chunk) {
+                  streamedAny = true;
+                  accumulatedText += parsed.chunk;
+                  setMessages(prev =>
+                    prev.map(m => (m.id === aiMsgId ? { ...m, text: accumulatedText } : m))
+                  );
+                }
+              } catch {
+                // Ignore partial JSON
+              }
+            }
           }
         }
-      } catch (fbErr) {
-        console.warn('Fallback API error:', fbErr);
+      } catch (streamErr: any) {
+        console.error('Streaming connection issue:', streamErr);
       }
 
-      if (!accumulatedText.trim()) {
-        accumulatedText = 'माफ गर्नुहोस्, हाल AI सेवामा अस्थायी समस्या आएको छ। कृपया केही समयपछि पुनः प्रयास गर्नुहोस्।';
-        setMessages(prev =>
-          prev.map(m => (m.id === aiMsgId ? { ...m, text: accumulatedText } : m))
-        );
+      if (!streamedAny || !accumulatedText.trim()) {
+        try {
+          const fallbackRes = await fetch('/api/ai-assistant', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              query: queryToSend,
+              history: chatHistory,
+              image: currentImage ? { data: currentImage.base64, mimeType: currentImage.mimeType } : undefined
+            })
+          });
+          if (fallbackRes.ok) {
+            const data = await fallbackRes.json();
+            if (data.answer && data.answer.trim()) {
+              accumulatedText = data.answer.trim();
+              setMessages(prev =>
+                prev.map(m => (m.id === aiMsgId ? { ...m, text: accumulatedText } : m))
+              );
+            }
+          }
+        } catch (fbErr: any) {
+          console.error('Fallback API error:', fbErr);
+        }
       }
     }
 
