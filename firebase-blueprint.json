@@ -1,0 +1,123 @@
+{
+  "entities": {
+    "users": {
+      "title": "User",
+      "description": "User profile document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "User ID (matches auth.uid)" },
+        "name": { "type": "string", "description": "Full name" },
+        "email": { "type": "string", "description": "Email address" },
+        "provider": { "type": "string", "description": "google or password" },
+        "photoURL": { "type": "string", "description": "Avatar URL" },
+        "role": { "type": "string", "description": "student or admin" },
+        "xp": { "type": "number", "description": "Total XP earned" },
+        "totalLogins": { "type": "number", "description": "Login count" },
+        "quizzesAttempted": { "type": "number", "description": "Quizzes attempted" },
+        "lastLoginAt": { "type": "string", "description": "ISO timestamp of last login" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of account creation" }
+      }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Aggregated daily or general analytics metrics",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Daily date or global metric key" },
+        "pageViews": { "type": "number", "description": "Count of page views" },
+        "activeUsers": { "type": "number", "description": "Count of active users" },
+        "lastUpdated": { "type": "string", "description": "ISO timestamp" }
+      }
+    },
+    "user_activities": {
+      "title": "UserActivity",
+      "description": "Live activity event logged for authenticated actions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "activityType": { "type": "string" },
+        "details": { "type": "string" },
+        "timestamp": { "type": "string" }
+      }
+    },
+    "download_events": {
+      "title": "DownloadEvent",
+      "description": "Tracks study material and syllabus PDF download actions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "resourceName": { "type": "string" },
+        "fileType": { "type": "string" },
+        "details": { "type": "string" },
+        "timestamp": { "type": "string" }
+      }
+    },
+    "exam_scores": {
+      "title": "ExamScore",
+      "description": "Exam result scores and statistics",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "quizId": { "type": "string" },
+        "quizTitle": { "type": "string" },
+        "score": { "type": "number" },
+        "totalQuestions": { "type": "number" },
+        "accuracy": { "type": "number" },
+        "timestamp": { "type": "string" }
+      }
+    },
+    "exam_submissions": {
+      "title": "ExamSubmission",
+      "description": "Live student exam submission records for admin tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "quizId": { "type": "string" },
+        "quizTitle": { "type": "string" },
+        "score": { "type": "number" },
+        "totalQuestions": { "type": "number" },
+        "accuracy": { "type": "number" },
+        "timeTakenSeconds": { "type": "number" },
+        "timestamp": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "users",
+      "description": "User profile collection"
+    },
+    "/analytics/{docId}": {
+      "schema": "analytics",
+      "description": "Application analytics data"
+    },
+    "/user_activities/{activityId}": {
+      "schema": "user_activities",
+      "description": "User activity log stream"
+    },
+    "/download_events/{downloadId}": {
+      "schema": "download_events",
+      "description": "Study material PDF download events"
+    },
+    "/exam_scores/{scoreId}": {
+      "schema": "exam_scores",
+      "description": "Completed exam score records"
+    },
+    "/exam_submissions/{submissionId}": {
+      "schema": "exam_submissions",
+      "description": "Live exam submissions collection for admin monitoring"
+    }
+  }
+}

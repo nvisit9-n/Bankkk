@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banking Tayari Nepal - Loksewa & Public Enterprises Exam Platform</title>
+    <link rel="icon" type="image/svg+xml" href="/logo-icon.svg?v=20260904" />
+    <meta name="description" content="Nepal's zero-error preparation platform for Nepal Rastra Bank, Rastriya Banijya Bank, Loksewa, and Public Enterprises exams." />
+    <meta name="keywords" content="Banking Tayari Nepal, Loksewa Nepal, Banking Exam Practice, NRB Level 4, Public Enterprises Pre-Test" />
+    <meta property="og:title" content="Banking Tayari Nepal - Loksewa & Public Enterprises Exam Platform" />
+    <meta property="og:description" content="Nepal's zero-error preparation platform for Nepal Rastra Bank, Rastriya Banijya Bank, Loksewa, and Public Enterprises exams." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Google Analytics (GA4) Script -->
+    <script>
+      (function() {
+        var gaId = '%VITE_GA_MEASUREMENT_ID%' || window.localStorage.getItem('btn_custom_ga_measurement_id') || '';
+        if (gaId && gaId.indexOf('%') === -1 && gaId.indexOf('G-') === 0) {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', gaId, { send_page_view: true });
+        } else {
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function(){window.dataLayer.push(arguments);};
+        }
+      })();
+    </script>
+    <script>
+      window.addEventListener('error', function (event) {
+        if (event.error) {
+          console.error('App Runtime Error:', event.error.message, event.error.stack);
+        } else {
+          console.warn('Unhandled Script Error:', event.message, event.filename, event.lineno);
+        }
+      });
+      window.addEventListener('unhandledrejection', function (event) {
+        console.warn('Unhandled Promise Rejection:', event.reason);
+      });
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
+    <div id="root"></div>
+    <script type="module" crossorigin="anonymous" src="/src/main.tsx"></script>
+  </body>
+</html>
+

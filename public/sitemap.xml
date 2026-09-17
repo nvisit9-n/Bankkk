@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <!-- Homepage -->
+  <url>
+    <loc>https://bankingtayarinepal.com/</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Public Enterprises & PPP 50 Pre-Test Sets Engine -->
+  <url>
+    <loc>https://bankingtayarinepal.com/?tab=quiz</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Courses & Banking Syllabi -->
+  <url>
+    <loc>https://bankingtayarinepal.com/?tab=courses</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Official YouTube Video Lectures -->
+  <url>
+    <loc>https://bankingtayarinepal.com/?tab=video-lectures</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Study Notes & AI Smart Notes -->
+  <url>
+    <loc>https://bankingtayarinepal.com/?tab=free-notes</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Daily Current Affairs (समसामयिक) -->
+  <url>
+    <loc>https://bankingtayarinepal.com/?tab=current-affairs</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Premium Study Packages -->
+  <url>
+    <loc>https://bankingtayarinepal.com/?tab=premium</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- User Profile & Progress Tracker -->
+  <url>
+    <loc>https://bankingtayarinepal.com/?tab=profile</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

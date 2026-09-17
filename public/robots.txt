@@ -1,0 +1,8 @@
+# robots.txt for Banking Tayari Nepal
+# Fast Google Search indexing and crawling
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://bankingtayarinepal.com/sitemap.xml
