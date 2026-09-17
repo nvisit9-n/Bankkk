@@ -321,25 +321,25 @@ export const AiAssistantModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full h-[85vh] border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-6 animate-fadeIn">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl max-w-[94%] sm:max-w-2xl w-full mx-auto max-h-[85vh] h-[85vh] border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden my-auto">
         
         {/* Header */}
-        <header className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-amber-500/10 dark:bg-amber-950/30">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 font-bold shadow-md">
-              <Bot className="w-5 h-5" />
+        <header className="p-3 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-amber-500/10 dark:bg-amber-950/30 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 font-bold shadow-md shrink-0">
+              <Bot className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="font-black text-slate-900 dark:text-white text-base sm:text-lg">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <h2 className="font-black text-slate-900 dark:text-white text-sm sm:text-lg truncate">
                   AI साथी (AI Study Assistant)
                 </h2>
-                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 text-[10px] font-bold">
+                <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 text-[9px] sm:text-[10px] font-bold shrink-0">
                   Gemini Flash AI
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate max-w-[190px] sm:max-w-none">
                 नेपाली भाषामा तत्काल परीक्षा सहायता तथा टिपोट
               </p>
             </div>
@@ -347,27 +347,29 @@ export const AiAssistantModal: React.FC = () => {
 
           <button
             onClick={() => setIsAiModalOpen(false)}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-white/40 dark:hover:bg-slate-800 transition"
+            className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-white/40 dark:hover:bg-slate-800 transition shrink-0"
+            title="बन्द गर्नुहोस्"
+            aria-label="बन्द गर्नुहोस्"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </header>
 
         {/* Chat Stream View */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-3 sm:space-y-4">
           {messages.map(msg => (
             <div
               key={msg.id}
-              className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex gap-2 sm:gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.sender === 'ai' && (
-                <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 mt-1">
-                  <Bot className="w-4 h-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               )}
 
               <div
-                className={`max-w-[85%] sm:max-w-[75%] p-4 rounded-2xl text-xs sm:text-sm leading-relaxed ${
+                className={`max-w-[88%] sm:max-w-[75%] p-3 sm:p-4 rounded-xl sm:rounded-2xl text-xs sm:text-sm leading-relaxed ${
                   msg.sender === 'user'
                     ? 'bg-emerald-600 text-white font-medium rounded-br-none whitespace-pre-line'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-none border border-slate-200/60 dark:border-slate-700/60'
@@ -378,7 +380,7 @@ export const AiAssistantModal: React.FC = () => {
                     <img
                       src={msg.image}
                       alt="संलग्न तस्बिर"
-                      className="max-h-52 max-w-full rounded-xl border border-white/20 object-contain shadow-sm bg-black/10"
+                      className="max-h-44 sm:max-h-52 max-w-full rounded-lg sm:rounded-xl border border-white/20 object-contain shadow-sm bg-black/10"
                     />
                   </div>
                 )}
@@ -390,7 +392,7 @@ export const AiAssistantModal: React.FC = () => {
                 )}
 
                 {msg.sender === 'ai' && (
-                  <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-700/60 flex items-center justify-between text-[11px] text-slate-500">
+                  <div className="pt-2 sm:pt-3 mt-2 sm:mt-3 border-t border-slate-200 dark:border-slate-700/60 flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500">
                     <button
                       onClick={() => handleCopyText(msg.id, msg.text)}
                       className="flex items-center gap-1 hover:text-emerald-600 transition"
@@ -411,7 +413,7 @@ export const AiAssistantModal: React.FC = () => {
               </div>
 
               {msg.sender === 'user' && (
-                <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-1 font-bold text-xs">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
                   U
                 </div>
               )}
@@ -428,12 +430,12 @@ export const AiAssistantModal: React.FC = () => {
         </div>
 
         {/* Suggested Prompt Chips */}
-        <div className="p-3 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-200 dark:border-slate-800 overflow-x-auto whitespace-nowrap flex gap-2 scrollbar-none">
+        <div className="py-2 px-2.5 sm:p-3 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-200 dark:border-slate-800 overflow-x-auto whitespace-nowrap flex gap-1.5 sm:gap-2 scrollbar-none shrink-0">
           {samplePrompts.map((p, pIdx) => (
             <button
               key={pIdx}
               onClick={() => handleSendPrompt(p)}
-              className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-medium hover:border-amber-500 transition shrink-0"
+              className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-[10px] sm:text-[11px] font-medium hover:border-amber-500 transition shrink-0"
             >
               💡 {p}
             </button>
@@ -442,13 +444,13 @@ export const AiAssistantModal: React.FC = () => {
 
         {/* Attached image preview bar */}
         {attachedImage && (
-          <div className="px-4 py-2 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="relative">
+          <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+              <div className="relative shrink-0">
                 <img
                   src={attachedImage.previewUrl}
                   alt="Attached"
-                  className="w-10 h-10 object-cover rounded-lg border border-slate-300 dark:border-slate-700 shadow-sm"
+                  className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded-md sm:rounded-lg border border-slate-300 dark:border-slate-700 shadow-sm"
                 />
                 <button
                   type="button"
@@ -460,15 +462,15 @@ export const AiAssistantModal: React.FC = () => {
                   <X className="w-3 h-3" />
                 </button>
               </div>
-              <div className="text-xs text-slate-700 dark:text-slate-200 truncate max-w-[200px] sm:max-w-xs">
-                <p className="font-semibold truncate">{attachedImage.name}</p>
-                <p className="text-[10px] text-amber-600 dark:text-amber-400">तस्बिर संलग्न गरियो (OCR र चरणबद्ध समाधान)</p>
+              <div className="text-xs text-slate-700 dark:text-slate-200 truncate max-w-[170px] sm:max-w-xs">
+                <p className="font-semibold text-[11px] sm:text-xs truncate">{attachedImage.name}</p>
+                <p className="text-[9px] sm:text-[10px] text-amber-600 dark:text-amber-400">तस्बिर संलग्न गरियो (OCR र चरणबद्ध समाधान)</p>
               </div>
             </div>
             <button
               type="button"
               onClick={handleRemoveImage}
-              className="text-xs text-rose-500 hover:text-rose-600 font-medium px-2 py-1"
+              className="text-[11px] sm:text-xs text-rose-500 hover:text-rose-600 font-medium px-1.5 sm:px-2 py-1 shrink-0"
             >
               हटाउनुहोस्
             </button>
@@ -483,7 +485,7 @@ export const AiAssistantModal: React.FC = () => {
               handleSendPrompt(inputQuery);
             }
           }}
-          className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-2"
+          className="p-2 sm:p-3 sm:p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-1.5 sm:gap-2 shrink-0"
         >
           <input
             type="file"
@@ -497,11 +499,11 @@ export const AiAssistantModal: React.FC = () => {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isTyping}
-            className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 hover:border-amber-500 transition disabled:opacity-40"
+            className="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 hover:border-amber-500 transition disabled:opacity-40 shrink-0"
             title="तस्बिर संलग्न गर्नुहोस् (लोकसेवा प्रश्न, हिसाब वा नोट)"
             aria-label="तस्बिर संलग्न गर्नुहोस्"
           >
-            <Paperclip className="w-5 h-5" />
+            <Paperclip className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <input
             id="ai-assistant-input"
@@ -510,16 +512,16 @@ export const AiAssistantModal: React.FC = () => {
             onChange={(e) => setInputQuery(e.target.value)}
             placeholder={attachedImage ? "यस तस्बिर सम्बन्धी कुनै विशेष निर्देशन वा प्रश्न लेख्नुहोस्..." : "आफ्नो प्रश्न यहाँ सोध्नुहोस्..."}
             aria-label="आफ्नो प्रश्न यहाँ सोध्नुहोस्..."
-            className="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
+            className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 min-w-0"
           />
           <button
             id="ai-assistant-send-btn"
             type="submit"
             disabled={(!inputQuery.trim() && !attachedImage) || isTyping}
-            className="p-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 hover:from-amber-600 hover:to-orange-600 transition disabled:opacity-40 cursor-pointer"
+            className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 hover:from-amber-600 hover:to-orange-600 transition disabled:opacity-40 cursor-pointer shrink-0"
             title="पठाउनुहोस्"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </form>
 

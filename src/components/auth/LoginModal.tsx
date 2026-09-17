@@ -403,7 +403,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           setShowAuthModal(false);
         }
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200"
     >
       {/* Toast Notification */}
       {toastMessage && (
@@ -424,40 +424,41 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
       <div 
         id="login-auth-modal-card"
-        className="relative w-full max-w-md bg-white border border-slate-200 rounded-3xl shadow-xl overflow-hidden my-auto transition-all"
+        className="relative w-full max-w-[92%] sm:max-w-md mx-auto max-h-[85vh] overflow-y-auto bg-white border border-slate-200 rounded-2xl sm:rounded-3xl shadow-xl my-auto transition-all"
       >
         {/* Top Close Button */}
         <button
           type="button"
           onClick={() => setShowAuthModal(false)}
-          className="absolute top-4 right-4 z-20 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 p-1.5 sm:p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
           title="बन्द गर्नुहोस्"
+          aria-label="बन्द गर्नुहोस्"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
         {/* Top Header */}
-        <div className="pt-7 pb-4 px-6 sm:px-8 text-center bg-slate-50/70 border-b border-slate-100 relative">
-          <div className="flex justify-center mb-3">
-            <BrandLogo variant="full" className="h-10 sm:h-11 w-auto object-contain" />
+        <div className="pt-5 sm:pt-7 pb-3 sm:pb-4 px-4 sm:px-8 text-center bg-slate-50/70 border-b border-slate-100 relative">
+          <div className="flex justify-center mb-2.5 sm:mb-3">
+            <BrandLogo variant="full" className="h-8 sm:h-11 w-auto object-contain" />
           </div>
-          <h2 className="text-xl font-black text-slate-900 tracking-tight">
+          <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
             {activeTab === 'signin' && 'लगइन (Sign In)'}
             {activeTab === 'signup' && 'नयाँ खाता सिर्जना (Sign Up)'}
             {activeTab === 'forgot' && 'पासवर्ड रिसेट (Reset Password)'}
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1">
             {activeTab === 'signin' && 'बैंकिङ्ग तथा लोक सेवा तयारीको लागि स्वागत छ'}
             {activeTab === 'signup' && '५० पूर्ण सेट र व्यक्तिगत तयारीको लागि दर्ता हुनुहोस्'}
             {activeTab === 'forgot' && 'आफ्नो इमेल प्रविष्ट गरी रिसेट लिंक प्राप्त गर्नुहोस्'}
           </p>
 
           {/* Auth Mode Tabs with Sleek Red/Blue Indicator */}
-          <div className="flex items-center justify-center p-1 bg-slate-200/80 rounded-xl mt-4 gap-1">
+          <div className="flex items-center justify-center p-1 bg-slate-200/80 rounded-xl mt-3 sm:mt-4 gap-1">
             <button
               type="button"
               onClick={() => { setActiveTab('signin'); setError(''); }}
-              className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition ${
+              className={`flex-1 py-1 sm:py-1.5 px-2.5 sm:px-3 rounded-lg text-xs font-bold transition ${
                 activeTab === 'signin' 
                   ? 'bg-gradient-to-r from-[#0B2046] to-[#DC2626] text-white shadow-xs' 
                   : 'text-slate-600 hover:text-slate-900'
@@ -468,7 +469,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             <button
               type="button"
               onClick={() => { setActiveTab('signup'); setError(''); }}
-              className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition ${
+              className={`flex-1 py-1 sm:py-1.5 px-2.5 sm:px-3 rounded-lg text-xs font-bold transition ${
                 activeTab === 'signup' 
                   ? 'bg-gradient-to-r from-[#0B2046] to-[#DC2626] text-white shadow-xs' 
                   : 'text-slate-600 hover:text-slate-900'
@@ -479,7 +480,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             <button
               type="button"
               onClick={() => { setActiveTab('forgot'); setError(''); }}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition ${
+              className={`flex-1 py-1 sm:py-1.5 px-2 rounded-lg text-xs font-bold transition ${
                 activeTab === 'forgot' 
                   ? 'bg-gradient-to-r from-[#0B2046] to-[#DC2626] text-white shadow-xs' 
                   : 'text-slate-600 hover:text-slate-900'
@@ -494,21 +495,21 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         {customMessage && (
           <div 
             id="auth-interceptor-callout"
-            className="mx-6 sm:mx-8 mt-4 p-3.5 rounded-2xl bg-gradient-to-r from-red-50 via-white to-blue-50 border-2 border-red-500/40 shadow-xs flex items-start gap-3 text-left animate-in fade-in slide-in-from-top-2 duration-200"
+            className="mx-3.5 sm:mx-8 mt-3 sm:mt-4 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-50 via-white to-blue-50 border-2 border-red-500/40 shadow-xs flex items-start gap-2.5 sm:gap-3 text-left animate-in fade-in slide-in-from-top-2 duration-200"
           >
-            <div className="p-2 bg-gradient-to-br from-red-600 to-[#0B2046] text-white rounded-xl shadow-xs shrink-0 mt-0.5">
-              <Lock className="w-4 h-4" />
+            <div className="p-1.5 sm:p-2 bg-gradient-to-br from-red-600 to-[#0B2046] text-white rounded-xl shadow-xs shrink-0 mt-0.5">
+              <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 mb-1">
-                <span className="text-[10px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-900 text-white">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-900 text-white">
                   प्रमाणीकरण आवश्यक (Sign-In Required)
                 </span>
               </div>
               <p className="text-xs sm:text-sm font-black text-slate-900 leading-snug">
                 {customMessage}
               </p>
-              <p className="text-[11px] text-slate-500 mt-1 font-medium leading-relaxed">
+              <p className="text-[10px] sm:text-[11px] text-slate-500 mt-1 font-medium leading-relaxed">
                 गहिरो अध्ययन सामग्री, डाउनलोड योग्य पीडीएफ तथा ५० वटै नमुना वस्तुगत परीक्षा सेटहरूमा निःशुल्क पहुँच पाउन तुरुन्त लगइन गर्नुहोस्।
               </p>
             </div>
@@ -519,7 +520,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         {error && (
           <div 
             id="login-error-alert"
-            className="mx-6 sm:mx-8 mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2"
+            className="mx-3.5 sm:mx-8 mt-3 sm:mt-4 p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2"
           >
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
             <span className="flex-1">{error}</span>
@@ -534,7 +535,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         )}
 
         {/* Card Body */}
-        <div className="p-6 sm:p-8 space-y-4">
+        <div className="p-3.5 sm:p-8 space-y-3 sm:space-y-4">
           
           {/* Prominent Google OAuth Button */}
           {activeTab !== 'forgot' && (
@@ -544,15 +545,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 id="btn-google-auth-trigger"
                 disabled={isSigningIn}
                 onClick={handleGoogleSignIn}
-                className="w-full min-h-[46px] py-2.5 px-4 flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm rounded-xl border border-slate-300 shadow-2xs hover:shadow-xs transition active:scale-[0.99] cursor-pointer group disabled:opacity-50"
+                className="w-full min-h-[42px] sm:min-h-[46px] py-2 sm:py-2.5 px-3 sm:px-4 flex items-center justify-center gap-2.5 sm:gap-3 bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm rounded-xl border border-slate-300 shadow-2xs hover:shadow-xs transition active:scale-[0.99] cursor-pointer group disabled:opacity-50"
               >
                 <GoogleGIcon className="w-4 h-4 group-hover:scale-110 transition-transform shrink-0" />
                 <span>Google मार्फत जारी राख्नुहोस् (Continue with Google)</span>
               </button>
 
-              <div className="relative flex py-1 items-center">
+              <div className="relative flex py-0.5 sm:py-1 items-center">
                 <div className="flex-grow border-t border-slate-200" />
-                <span className="flex-shrink mx-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="flex-shrink mx-3 text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                   वा इमेल मार्फत
                 </span>
                 <div className="flex-grow border-t border-slate-200" />
@@ -562,7 +563,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
           {/* Form Content Based on Active Tab */}
           {activeTab === 'signin' && (
-            <form onSubmit={handleEmailSignIn} className="space-y-3.5">
+            <form onSubmit={handleEmailSignIn} className="space-y-2.5 sm:space-y-3.5">
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5 text-slate-400" />
@@ -574,7 +575,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="yourname@gmail.com"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition"
+                  className="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition"
                 />
               </div>
 
@@ -599,7 +600,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition pr-10"
+                    className="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition pr-10"
                   />
                   <button
                     type="button"
@@ -614,7 +615,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               <button
                 type="submit"
                 disabled={isSigningIn}
-                className="w-full min-h-[46px] py-3 px-5 bg-gradient-to-r from-[#0B2046] via-[#1E3A8A] to-[#DC2626] hover:from-[#06142E] hover:to-[#B91C1C] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full min-h-[42px] sm:min-h-[46px] py-2.5 sm:py-3 px-4 sm:px-5 bg-gradient-to-r from-[#0B2046] via-[#1E3A8A] to-[#DC2626] hover:from-[#06142E] hover:to-[#B91C1C] active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {isSigningIn ? (
                   <span>साइन-इन हुँदैछ...</span>
@@ -630,7 +631,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           )}
 
           {activeTab === 'signup' && (
-            <form onSubmit={handleEmailSignUp} className="space-y-3.5">
+            <form onSubmit={handleEmailSignUp} className="space-y-2.5 sm:space-y-3.5">
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                   <User className="w-3.5 h-3.5 text-slate-400" />
@@ -642,7 +643,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="उदा: ऋषि राम थापा"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition"
+                  className="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition"
                 />
               </div>
 
@@ -657,7 +658,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="yourname@gmail.com"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition"
+                  className="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition"
                 />
               </div>
 
@@ -674,7 +675,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition pr-10"
+                    className="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition pr-10"
                   />
                   <button
                     type="button"
@@ -691,7 +692,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 <select
                   value={targetExam}
                   onChange={(e) => setTargetExam(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 outline-none transition cursor-pointer"
+                  className="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 outline-none transition cursor-pointer"
                 >
                   {POPULAR_TARGET_EXAMS.map(exam => (
                     <option key={exam} value={exam}>{exam}</option>
@@ -702,7 +703,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               <button
                 type="submit"
                 disabled={isSigningIn}
-                className="w-full min-h-[46px] py-3 px-5 bg-gradient-to-r from-[#0B2046] via-[#1E3A8A] to-[#DC2626] hover:from-[#06142E] hover:to-[#B91C1C] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full min-h-[42px] sm:min-h-[46px] py-2.5 sm:py-3 px-4 sm:px-5 bg-gradient-to-r from-[#0B2046] via-[#1E3A8A] to-[#DC2626] hover:from-[#06142E] hover:to-[#B91C1C] active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {isSigningIn ? (
                   <span>दर्ता गर्दैछ...</span>
@@ -718,7 +719,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           )}
 
           {activeTab === 'forgot' && (
-            <form onSubmit={handlePasswordReset} className="space-y-3.5">
+            <form onSubmit={handlePasswordReset} className="space-y-2.5 sm:space-y-3.5">
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5 text-slate-400" />
@@ -730,14 +731,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="yourname@gmail.com"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition"
+                  className="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 text-xs sm:text-sm rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSigningIn}
-                className="w-full min-h-[46px] py-3 px-5 bg-gradient-to-r from-[#0B2046] via-[#1E3A8A] to-[#DC2626] hover:from-[#06142E] hover:to-[#B91C1C] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full min-h-[42px] sm:min-h-[46px] py-2.5 sm:py-3 px-4 sm:px-5 bg-gradient-to-r from-[#0B2046] via-[#1E3A8A] to-[#DC2626] hover:from-[#06142E] hover:to-[#B91C1C] active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {isSigningIn ? (
                   <span>पठाउँदैछ...</span>
@@ -752,7 +753,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab('signin')}
-                className="w-full py-2 text-xs font-bold text-slate-600 hover:text-slate-900 transition text-center"
+                className="w-full py-1.5 sm:py-2 text-xs font-bold text-slate-600 hover:text-slate-900 transition text-center"
               >
                 ← लगइनमा फर्किनुहोस्
               </button>
@@ -764,14 +765,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             type="button"
             id="btn-continue-as-guest"
             onClick={handleContinueAsGuest}
-            className="w-full py-2.5 px-3 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition flex items-center justify-center gap-2 cursor-pointer border border-dashed border-slate-300"
+            className="w-full py-2 sm:py-2.5 px-3 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition flex items-center justify-center gap-2 cursor-pointer border border-dashed border-slate-300"
           >
             <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
             <span>अतिथि मोडमा पूर्वावलोकन (Preview as Guest)</span>
           </button>
 
           {/* Guarantee Badge */}
-          <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-1">
+          <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] text-slate-400 pt-0.5 sm:pt-1">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
             <span>सुरक्षित लगइन • Banking Tayari Nepal</span>
           </div>

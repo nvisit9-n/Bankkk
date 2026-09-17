@@ -82,33 +82,33 @@ export const SetSelectionModal: React.FC<SetSelectionModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-5 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
       aria-labelledby="set-selection-modal-title"
       onClick={onClose}
     >
       <div 
-        className="w-full max-w-4xl max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col"
+        className="w-full max-w-[94%] sm:max-w-4xl max-h-[85vh] bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="p-4 sm:p-6 bg-royal-gradient border-b border-blue-400/30 text-white flex items-center justify-between shrink-0 shadow-soft-blue">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 text-white">
-              <Building2 className="w-6 h-6 text-white" />
+        <div className="p-3.5 sm:p-6 bg-royal-gradient border-b border-blue-400/30 text-white flex items-center justify-between shrink-0 shadow-soft-blue">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 text-white">
+              <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <h3 id="set-selection-modal-title" className="text-base sm:text-lg font-black text-white">
-                  सङ्गठित संस्था ५० पूर्ण सेट परीक्षा हब (Public Enterprises)
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <h3 id="set-selection-modal-title" className="text-sm sm:text-lg font-black text-white">
+                  सङ्गठित संस्था ५० पूर्ण सेट हब
                 </h3>
-                <span className="px-2 py-0.5 rounded-full bg-[#DC2626] text-white text-[10px] font-black">
-                  ५० सेटहरू • {totalQuestionsCount.toLocaleString()} MCQs
+                <span className="px-2 py-0.5 rounded-full bg-[#DC2626] text-white text-[9px] sm:text-[10px] font-black">
+                  ५० सेट • {totalQuestionsCount.toLocaleString()} MCQs
                 </span>
               </div>
-              <p className="text-xs text-blue-100 mt-0.5">
-                तह ४ (२० अङ्क) र तह ५ (१० अङ्क) पाठ्यक्रम अनुसार प्रत्येक सेटमा ५० वस्तुगत प्रश्न, ४५ मिनेट र २०% नेगेटिभ मार्किङ।
+              <p className="text-[11px] sm:text-xs text-blue-100 mt-0.5">
+                तह ४ र तह ५ पाठ्यक्रम: प्रत्येक सेटमा ५० प्रश्न, ४५ मिनेट र नेगेटिभ मार्किङ।
               </p>
             </div>
           </div>
@@ -117,26 +117,26 @@ export const SetSelectionModal: React.FC<SetSelectionModalProps> = ({
             type="button"
             id="close-set-selection-modal-btn"
             onClick={onClose}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition cursor-pointer shrink-0"
+            className="p-1.5 sm:p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition cursor-pointer shrink-0"
             title="बन्द गर्नुहोस्"
             aria-label="Close modal"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="p-3 sm:p-4 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700/80 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+        <div className="p-2.5 sm:p-4 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700/80 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 shrink-0">
           {/* Search input */}
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               id="search-set-input"
               placeholder="सेट खोज्नुहोस् (उदा: Set 1, Set 25)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-red-500 transition"
+              className="w-full pl-8 sm:pl-9 pr-3 py-1.5 sm:py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-red-500 transition"
             />
             {searchQuery && (
               <button 
@@ -150,27 +150,27 @@ export const SetSelectionModal: React.FC<SetSelectionModalProps> = ({
           </div>
 
           {/* Difficulty filter tabs */}
-          <div className="flex items-center gap-1.5 self-start sm:self-auto overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-1 sm:gap-1.5 self-start sm:self-auto overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
             {['All', 'Easy', 'Medium', 'Hard'].map((diff) => (
               <button
                 key={diff}
                 type="button"
                 id={`filter-difficulty-${diff.toLowerCase()}`}
                 onClick={() => setFilterDifficulty(diff)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap ${
                   filterDifficulty === diff
                     ? 'bg-[#DC2626] text-white shadow-sm'
                     : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600'
                 }`}
               >
-                {diff === 'All' ? 'सबै सेटहरू' : diff === 'Easy' ? 'सजिलो (Easy)' : diff === 'Medium' ? 'मध्यम (Medium)' : 'कठिन (Hard)'}
+                {diff === 'All' ? 'सबै सेटहरू' : diff === 'Easy' ? 'सजिलो' : diff === 'Medium' ? 'मध्यम' : 'कठिन'}
               </button>
             ))}
           </div>
         </div>
 
         {/* Sets Grid */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3.5">
           {filteredSets.length === 0 ? (
             <div className="col-span-full py-12 text-center text-slate-500 dark:text-slate-400 space-y-2">
               <Layers className="w-10 h-10 mx-auto opacity-40 text-red-500" />
