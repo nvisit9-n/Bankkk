@@ -22,7 +22,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json());
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 
 // Container Health check endpoints for Cloud Run and monitoring
 app.get("/api/health", (_req, res) => {
@@ -117,7 +118,7 @@ app.get(["/auth/google/callback", "/auth/google/callback/", "/auth/callback", "/
 // Lazy initialize Gemini client
 let genAI: GoogleGenAI | null = null;
 function getGeminiClient(): GoogleGenAI | null {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
   if (!apiKey) return null;
   if (!genAI) {
     genAI = new GoogleGenAI({
@@ -255,35 +256,81 @@ Format Style: ${format}`;
   }
 });
 
-const AI_ASSISTANT_SYSTEM_INSTRUCTION = `तपाईं "Banking Tayari Nepal AI साथी" हुनुहुन्छ - नेपाल राष्ट्र बैंक (NRB), राष्ट्रिय वाणिज्य बैंक (RBB), कृषि विकास बैंक (ADBL), नेपाल बैंक लिमिटेड (NBL) तथा लोकसेवा आयोगका परीक्षार्थीहरूको लागि विशेष नेपाली भाषाको उच्चस्तरीय AI शिक्षक।
-प्रयोगकर्ताले बैंकिङ, कानुन (नेपाल राष्ट्र बैंक ऐन २०५८, बैंक तथा वित्तीय संस्था सम्बन्धी ऐन बाफिया २०७३, सम्पत्ति शुद्धीकरण निवारण ऐन), व्यवस्थापन (HRM, Leadership, Planning), अर्थशास्त्र (मुद्रास्फीति, मौद्रिक नीति, वित्तीय नीति, GDP), लेखा (BRS, Audit, Balance Sheet), गणित, अङ्ग्रेजी, वा सामान्य ज्ञान/समसामयिक विषयमा कुनै पनि प्रश्न सोध्न सक्नेछन्।
+const AI_ASSISTANT_SYSTEM_INSTRUCTION = `तपाईं "Banking Tayari Nepal AI साथी" हुनुहुन्छ - नेपाल राष्ट्र बैंक (NRB), राष्ट्रिय वाणिज्य बैंक (RBB), कृषि विकास बैंक (ADBL), नेपाल बैंक लिमिटेड (NBL) तथा लोकसेवा आयोगका परीक्षार्थीहरूको लागि विशेष नेपाली भाषाको उच्चस्तरीय AI शिक्षक तथा विश्लेषक।
+प्रयोगकर्ताले बैंकिङ, कानुन (नेपाल राष्ट्र बैंक ऐन २०५८, बैंक तथा वित्तीय संस्था सम्बन्धी ऐन बाफिया २०७३, सम्पत्ति शुद्धीकरण निवारण ऐन), व्यवस्थापन (HRM, Leadership, Planning), अर्थशास्त्र (मुद्रास्फीति, मौद्रिक नीति, वित्तीय नीति, GDP), लेखा (BRS, Audit, Balance Sheet), गणित (Banking Math, Percentage, Ratio, Simple/Compound Interest), अङ्ग्रेजी, वा सामान्य ज्ञान (GK)/समसामयिक विषयमा कुनै पनि प्रश्न सोध्न सक्नेछन्।
+
+यदि प्रयोगकर्ताले कुनै तस्बिर (फोटो, लोकसेवा/बैंकिङ प्रश्नपत्र, गणित वा लेखाको हिसाब, वा हस्तलिखित नोट) संलग्न गरेका छन् भने:
+१. तस्बिरमा भएका प्रश्नहरू वा हस्तलिखित अक्षरहरूलाई स्पष्ट रूपमा पहिचान गर्नुहोस् (OCR)।
+२. सोही प्रश्नको यथार्थ, चरणबद्ध (Step-by-step) र शुद्ध समाधान निकाल्नुहोस्।
+३. गणितीय हिसाब भए सूत्र (Formula), हिसाब गर्ने स्पष्ट चरणहरू र अन्तिम उत्तर स्पष्ट रूपमा खुलाउनुहोस्।
 
 उत्तर लेख्दा अनिवार्य रूपमा निम्न ढाँचा अवलम्बन गर्नुहोस्:
-१. **विषयको शीर्षक र संक्षिप्त अवधारणा** (१-२ वाक्य)
-२. **मुख्य कानुनी वा सैद्धान्तिक बुँदाहरू** (स्पष्ट नेपाली बुँदागत ढाँचा, ऐनको दफा वा नीतिगत व्यवस्था खुलाउने)
-३. **महत्व / उद्देश्य वा कार्यहरू** (बुँदागत)
-४. **नेपालको विद्यमान अवस्था वा चुनौतीहरू**
+१. **विषयको शीर्षक र संक्षिप्त अवधारणा / प्रश्नको पहिचान**
+२. **मुख्य कानुनी, सैद्धान्तिक वा गणितीय चरणहरू** (स्पष्ट नेपाली बुँदागत ढाँचा, ऐनको दफा वा नीतिगत व्यवस्था खुलाउने)
+३. **महत्व / उद्देश्य, कार्यहरू वा हिसाबको समाधान** (बुँदागत)
+४. **नेपालको विद्यमान अवस्था, चुनौतीहरू वा विशेष ध्यान दिनुपर्ने बुँदाहरू**
 ५. 📌 **परीक्षा उपयोगी सुझाव (Exam Tip)**: लोकसेवा तथा बैंकिङ परीक्षामा उच्चतम अंक प्राप्त गर्ने विशेष प्रस्तुति ढाँचा।
 
-सधैं शुद्ध, प्राज्ञिक, तथ्यपरक र उच्च अंक ल्याउने परीक्षा-उपयोगी नेपाली भाषामा मात्र उत्तर दिनुहोस्।`;
+प्रयोगकर्ताले सोधेको ठीक विषय र प्रश्नलाई सम्बोधन गर्दै सधैं शुद्ध, प्राज्ञिक, तथ्यपरक र उच्च अंक ल्याउने परीक्षा-उपयोगी नेपाली भाषामा मात्र उत्तर दिनुहोस्।`;
 
-function buildGeminiContents(cleanQuery: string, history?: Array<{ sender: 'user' | 'ai'; text: string }>) {
-  const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+function buildGeminiContents(
+  cleanQuery: string,
+  history?: Array<{ sender: 'user' | 'ai'; text: string }>,
+  image?: { data: string; mimeType: string }
+) {
+  const contents: Array<{ role: 'user' | 'model'; parts: Array<any> }> = [];
   if (Array.isArray(history) && history.length > 0) {
     const validHistory = history
       .filter(h => h && typeof h.text === 'string' && h.text.trim())
-      .slice(-8);
+      .slice(-10);
     for (const item of validHistory) {
-      contents.push({
-        role: item.sender === 'user' ? 'user' : 'model',
-        parts: [{ text: item.text.trim() }]
-      });
+      const role: 'user' | 'model' = item.sender === 'user' ? 'user' : 'model';
+      // Gemini multiturn conversation must start with 'user'
+      if (contents.length === 0 && role === 'model') {
+        continue;
+      }
+      // Strictly alternate: merge if consecutive turns have identical role
+      if (contents.length > 0 && contents[contents.length - 1].role === role) {
+        contents[contents.length - 1].parts[0].text += `\n\n${item.text.trim()}`;
+      } else {
+        contents.push({
+          role,
+          parts: [{ text: item.text.trim() }]
+        });
+      }
     }
   }
-  contents.push({
-    role: 'user',
-    parts: [{ text: `कृपया निम्न प्रश्न वा विषयको विस्तृत, परीक्षा उपयोगी र बुँदागत नेपालीमा उत्तर दिनुहोस्:\n"${cleanQuery}"` }]
-  });
+
+  const promptText = cleanQuery || "कृपया संलग्न तस्बिरमा भएको प्रश्न वा टिपोट पढी विस्तृत, शुद्ध र बुँदागत समाधान वा व्याख्या नेपालीमा दिनुहोस्।";
+  const userParts: any[] = [];
+
+  if (image && image.data) {
+    const cleanBase64 = image.data.replace(/^data:image\/[a-zA-Z0-9.+]+;base64,/, '').trim();
+    const mimeType = image.mimeType || 'image/jpeg';
+    userParts.push({
+      inlineData: {
+        mimeType,
+        data: cleanBase64
+      }
+    });
+    userParts.push({
+      text: `तस्बिर संलग्न गरिएको छ। कृपया यस तस्बिरमा भएको प्रश्न वा टिपोट ध्यानपूर्वक पढी (OCR) त्यसको पूर्ण, शुद्ध र परीक्षा-उपयोगी समाधान बुँदागत नेपालीमा प्रदान गर्नुहोस्:\n"${promptText}"`
+    });
+  } else {
+    userParts.push({
+      text: `कृपया निम्न प्रश्न वा विषयको विस्तृत, परीक्षा उपयोगी र बुँदागत नेपालीमा उत्तर दिनुहोस्:\n"${promptText}"`
+    });
+  }
+
+  if (contents.length > 0 && contents[contents.length - 1].role === 'user' && (!image || !image.data)) {
+    contents[contents.length - 1].parts.push(...userParts);
+  } else {
+    contents.push({
+      role: 'user',
+      parts: userParts
+    });
+  }
+
   return contents;
 }
 
@@ -410,59 +457,59 @@ app.post("/api/ai-assistant-stream", async (req, res) => {
   res.setHeader("X-Accel-Buffering", "no");
   res.flushHeaders?.();
 
-  const { query, history } = req.body || {};
-  if (!query || typeof query !== "string" || !query.trim()) {
-    res.write(`data: ${JSON.stringify({ error: "Query is required" })}\n\n`);
+  const { query, history, image } = req.body || {};
+  let cleanQuery = typeof query === "string" ? query.trim() : "";
+  if (!cleanQuery && image && image.data) {
+    cleanQuery = "कृपया संलग्न तस्बिरमा भएको बैंकिङ/लोकसेवा सम्बन्धी प्रश्न वा टिपोट ध्यानपूर्वक पढी विस्तृत, शुद्ध र बुँदागत समाधान वा व्याख्या नेपालीमा दिनुहोस्।";
+  }
+
+  if (!cleanQuery && (!image || !image.data)) {
+    res.write(`data: ${JSON.stringify({ error: "Query or image is required" })}\n\n`);
     res.write(`data: [DONE]\n\n`);
     return res.end();
   }
 
-  const cleanQuery = query.trim();
   const ai = getGeminiClient();
 
   if (ai) {
-    try {
-      const contents = buildGeminiContents(cleanQuery, history);
-      const stream = await ai.models.generateContentStream({
-        model: "gemini-3.8-flash",
-        contents,
-        config: {
-          systemInstruction: AI_ASSISTANT_SYSTEM_INSTRUCTION,
-          temperature: 0.3,
-        }
-      });
+    const candidateModels = ["gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.8-flash"];
+    const contents = buildGeminiContents(cleanQuery, history, image);
 
-      let streamedCount = 0;
-      for await (const chunk of stream) {
-        if (chunk.text) {
-          streamedCount++;
-          res.write(`data: ${JSON.stringify({ chunk: chunk.text })}\n\n`);
-          if (typeof (res as any).flush === 'function') {
-            (res as any).flush();
+    for (const modelName of candidateModels) {
+      try {
+        const stream = await ai.models.generateContentStream({
+          model: modelName,
+          contents,
+          config: {
+            systemInstruction: AI_ASSISTANT_SYSTEM_INSTRUCTION,
+            temperature: 0.2,
+          }
+        });
+
+        let streamedCount = 0;
+        for await (const chunk of stream) {
+          if (chunk.text) {
+            streamedCount++;
+            res.write(`data: ${JSON.stringify({ chunk: chunk.text })}\n\n`);
+            if (typeof (res as any).flush === 'function') {
+              (res as any).flush();
+            }
           }
         }
-      }
 
-      if (streamedCount > 0) {
-        res.write(`data: [DONE]\n\n`);
-        return res.end();
+        if (streamedCount > 0) {
+          res.write(`data: [DONE]\n\n`);
+          return res.end();
+        }
+      } catch (geminiErr: any) {
+        console.warn(`Gemini streaming attempt with ${modelName} error:`, geminiErr?.message || geminiErr);
+        // Continue to next candidate model
       }
-    } catch (geminiErr: any) {
-      console.warn("Gemini streaming error in /api/ai-assistant-stream:", geminiErr?.message || geminiErr);
     }
   }
 
-  // Pedagogical engine fallback streamed word-by-word
-  const fallbackAnswer = getPedagogicalKnowledgeText(cleanQuery);
-  const words = fallbackAnswer.split(" ");
-  for (let i = 0; i < words.length; i += 2) {
-    const slice = words.slice(i, i + 2).join(" ") + " ";
-    res.write(`data: ${JSON.stringify({ chunk: slice })}\n\n`);
-    if (typeof (res as any).flush === 'function') {
-      (res as any).flush();
-    }
-    await new Promise(r => setTimeout(r, 15));
-  }
+  // If Gemini models could not stream
+  res.write(`data: ${JSON.stringify({ chunk: "माफ गर्नुहोस्, हाल AI सेवामा अस्थायी चाप छ। कृपया केही क्षणपछि पुनः आफ्नो प्रश्न सोध्नुहोस्।" })}\n\n`);
   res.write(`data: [DONE]\n\n`);
   res.end();
 });
@@ -470,45 +517,48 @@ app.post("/api/ai-assistant-stream", async (req, res) => {
 // AI Study Assistant (AI साथी) non-streaming endpoint for unlimited queries
 app.post("/api/ai-assistant", async (req, res) => {
   try {
-    const { query, history } = req.body;
-    if (!query || typeof query !== "string" || !query.trim()) {
-      return res.status(400).json({ error: "Query string is required" });
+    const { query, history, image } = req.body || {};
+    let cleanQuery = typeof query === "string" ? query.trim() : "";
+    if (!cleanQuery && image && image.data) {
+      cleanQuery = "कृपया संलग्न तस्बिरमा भएको बैंकिङ/लोकसेवा सम्बन्धी प्रश्न वा टिपोट ध्यानपूर्वक पढी विस्तृत, शुद्ध र बुँदागत समाधान वा व्याख्या नेपालीमा दिनुहोस्।";
+    }
+    if (!cleanQuery && (!image || !image.data)) {
+      return res.status(400).json({ error: "Query or image is required" });
     }
 
-    const cleanQuery = query.trim();
     const ai = getGeminiClient();
 
     if (ai) {
-      try {
-        const contents = buildGeminiContents(cleanQuery, history);
-        const response = await ai.models.generateContent({
-          model: "gemini-3.8-flash",
-          contents,
-          config: {
-            systemInstruction: AI_ASSISTANT_SYSTEM_INSTRUCTION,
-            temperature: 0.3,
-          },
-        });
+      const candidateModels = ["gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.8-flash"];
+      const contents = buildGeminiContents(cleanQuery, history, image);
 
-        if (response.text && response.text.trim()) {
-          return res.json({
-            success: true,
-            source: "gemini",
-            answer: response.text.trim()
+      for (const modelName of candidateModels) {
+        try {
+          const response = await ai.models.generateContent({
+            model: modelName,
+            contents,
+            config: {
+              systemInstruction: AI_ASSISTANT_SYSTEM_INSTRUCTION,
+              temperature: 0.2,
+            },
           });
+
+          if (response.text && response.text.trim()) {
+            return res.json({
+              success: true,
+              source: "gemini",
+              model: modelName,
+              answer: response.text.trim()
+            });
+          }
+        } catch (geminiErr: any) {
+          console.warn(`Gemini AI Assistant response fallback for ${modelName}:`, geminiErr?.message || geminiErr);
         }
-      } catch (geminiErr: any) {
-        console.warn("Gemini AI Assistant response fallback:", geminiErr?.message || geminiErr);
       }
     }
 
-    // Comprehensive Fallback Knowledge Engine in pure Nepali bullet points
-    const fallbackText = getPedagogicalKnowledgeText(cleanQuery);
-
-    return res.json({
-      success: true,
-      source: "knowledge_engine",
-      answer: fallbackText
+    return res.status(503).json({
+      error: "हाल AI सेवा व्यस्त छ। कृपया केही समयपछि पुनः प्रयास गर्नुहोस्।"
     });
   } catch (err: any) {
     console.error("AI Assistant error:", err);

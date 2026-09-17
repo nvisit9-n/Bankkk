@@ -153,7 +153,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         isRegistered: true
       };
 
-      // 1. Save session in LocalStorage immediately
+      // 1. React App State Updates: Immediately update global auth state (setUser, isLoggedIn)
+      // This immediately reflects DisplayName and Google Profile Photo on the header
+      if (setUser) setUser(enrichedProfile);
+      if (appSetUser) appSetUser(enrichedProfile);
+      if (setIsLoggedIn) setIsLoggedIn(true);
+      if (appSetIsLoggedIn) appSetIsLoggedIn(true);
+      if (onSuccess) onSuccess(enrichedProfile);
+
+      // 2. Save session in LocalStorage immediately
       const serialized = JSON.stringify(enrichedProfile);
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('btn_authenticated_user', serialized);
@@ -166,13 +174,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       localStorage.setItem('btn_last_auth_email', enrichedProfile.email || '');
       localStorage.setItem('btn_last_auth_name', enrichedProfile.displayName || enrichedProfile.name || '');
       localStorage.setItem('btn_auth_uid', enrichedProfile.id);
-
-      // 2. React App State Updates: Immediately update global auth state (setUser, isLoggedIn)
-      if (setUser) setUser(enrichedProfile);
-      if (appSetUser) appSetUser(enrichedProfile);
-      if (setIsLoggedIn) setIsLoggedIn(true);
-      if (appSetIsLoggedIn) appSetIsLoggedIn(true);
-      if (onSuccess) onSuccess(enrichedProfile);
 
       // 3. Dispatch global window events for instant header/dashboard reactive updates
       window.dispatchEvent(new CustomEvent('btn:profile-updated', { detail: enrichedProfile }));
@@ -202,10 +203,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       closeLoginModal();
       setIsLoginModalOpen(false);
       setIsSigningIn(false);
-      if (setIsLoggedIn) setIsLoggedIn(true);
-      if (appSetIsLoggedIn) appSetIsLoggedIn(true);
       if (setUser) setUser(profileData);
       if (appSetUser) appSetUser(profileData);
+      if (setIsLoggedIn) setIsLoggedIn(true);
+      if (appSetIsLoggedIn) appSetIsLoggedIn(true);
       if (onSuccess) onSuccess(profileData);
     }
   };
@@ -220,9 +221,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     try {
       const googleProfile = await FirebaseAuthService.signInWithGoogle();
       if (googleProfile && googleProfile.email) {
-        setIsSigningIn(false);
         setShowAuthModal(false);
         if (onClose) onClose();
+        setIsSigningIn(false);
         finalizeAuthentication(googleProfile);
       } else {
         setIsSigningIn(false);
